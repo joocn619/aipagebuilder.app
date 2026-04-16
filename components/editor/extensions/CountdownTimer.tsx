@@ -17,16 +17,17 @@ function calcRemaining(target: Date): { days: number; hours: number; minutes: nu
 }
 
 export function CountdownTimer({ settings }: Props) {
-  const target = settings.targetDate
-    ? new Date(settings.targetDate)
-    : new Date(Date.now() + ((settings.hours || 24) * 3600000) + ((settings.minutes || 0) * 60000));
+  const targetMs = settings.targetDate
+    ? new Date(settings.targetDate).getTime()
+    : Date.now() + ((settings.hours || 24) * 3600000) + ((settings.minutes || 0) * 60000);
 
-  const [time, setTime] = useState(calcRemaining(target));
+  const [time, setTime] = useState(calcRemaining(new Date(targetMs)));
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(calcRemaining(target)), 1000);
+    const t = new Date(targetMs);
+    const timer = setInterval(() => setTime(calcRemaining(t)), 1000);
     return () => clearInterval(timer);
-  }, [target]);
+  }, [targetMs]);
 
   return (
     <div className="py-4 text-center" style={{ backgroundColor: settings.bgColor || "#1e293b", color: settings.textColor || "#fff" }}>
