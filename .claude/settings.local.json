@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx shadcn@latest add button input label card separator tabs --yes)",
+      "Bash(npx shadcn@latest add dialog dropdown-menu popover scroll-area select sheet slider switch tooltip badge --yes)",
+      "Bash(npx shadcn@latest add avatar alert-dialog table skeleton progress --yes)",
+      "Bash(sed -i 's/import { useEffect, useState } from \"react\";/import { useState } from \"react\";/' \"app/\\(dashboard\\)/analytics/sessions/page.tsx\")",
+      "Bash(sed -i 's/import { useEffect, useState } from \"react\";/import { useState } from \"react\";/' \"app/\\(dashboard\\)/analytics/[pageId]/page.tsx\")",
+      "Bash(wc -l supabase/migrations/*.sql supabase/seed/*.sql)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\trend\\OneDrive\\Desktop\\Codex\\test\\PageForge\\app\\(editor)\\editor",
+      "c:\\Users\\trend\\OneDrive\\Desktop\\Codex\\test\\PageForge\\app\\(dashboard)\\pages\\[id]\\edit"
+    ]
+  }
+}
