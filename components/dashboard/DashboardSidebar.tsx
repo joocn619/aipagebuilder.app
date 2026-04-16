@@ -7,7 +7,7 @@ import { signOut } from "@/app/(auth)/actions";
 import {
   LayoutDashboard, FileText, Layers, MessageSquare, BarChart3,
   Users, MessageCircle, Settings, CreditCard, LogOut, Zap,
-  ChevronDown, Bell, Search, Globe, Sparkles,
+  ChevronDown, Bell, Search, Globe, Sparkles, X,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,12 @@ const SETTINGS_ITEMS = [
   { label: "Domains", href: "/settings/domains", icon: Globe },
 ];
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  mobileOpen?: boolean;
+  onClose?: () => void;
+}
+
+export function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
   const [settingsOpen, setSettingsOpen] = useState(
     SETTINGS_ITEMS.some((i) => pathname.startsWith(i.href))
@@ -40,19 +45,41 @@ export function DashboardSidebar() {
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
+  const handleNavClick = () => {
+    onClose?.();
+  };
+
   return (
-    <aside className="flex w-60 shrink-0 flex-col border-r border-white/5 bg-[#0d0d18]">
+    <aside
+      className={cn(
+        "flex w-64 shrink-0 flex-col border-r border-white/5 bg-[#0d0d18]",
+        // Desktop: always visible, static
+        "md:relative md:translate-x-0",
+        // Mobile: fixed overlay, slides in/out
+        "fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-in-out md:transition-none",
+        mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}
+    >
       {/* Logo + Workspace */}
       <div className="flex h-14 items-center justify-between border-b border-white/5 px-4">
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2" onClick={handleNavClick}>
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-blue-600">
             <Sparkles className="h-3.5 w-3.5 text-white" />
           </div>
           <span className="font-bold text-white text-sm">AIPageBuilder</span>
         </Link>
-        <button className="flex items-center gap-1 rounded-md px-1.5 py-1 text-white/40 hover:bg-white/5 hover:text-white transition-colors">
-          <Bell className="h-4 w-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button className="flex items-center gap-1 rounded-md p-1.5 text-white/40 hover:bg-white/5 hover:text-white transition-colors">
+            <Bell className="h-4 w-4" />
+          </button>
+          {/* Close button — mobile only */}
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center rounded-md p-1.5 text-white/40 hover:bg-white/5 hover:text-white transition-colors md:hidden"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       {/* Search */}
@@ -74,8 +101,9 @@ export function DashboardSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={handleNavClick}
                 className={cn(
-                  "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all",
+                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all",
                   active
                     ? "bg-violet-500/15 text-white font-medium"
                     : "text-white/50 hover:bg-white/5 hover:text-white"
@@ -113,8 +141,9 @@ export function DashboardSidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={handleNavClick}
                     className={cn(
-                      "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all",
+                      "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all",
                       active
                         ? "bg-violet-500/15 text-white font-medium"
                         : "text-white/50 hover:bg-white/5 hover:text-white"
