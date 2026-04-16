@@ -25,7 +25,7 @@ export default function BillingSettingsPage() {
   const [currentPlan] = useState<PlanKey>("pro");
   const [loading] = useState<string | null>(null);
 
-  const handleCheckout = (_planName: string) => {
+  const handleCheckout = (_key: string) => {
     toast.info("Billing coming soon!");
   };
 
