@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PLANS, type PlanKey } from "@/lib/stripe/plans";
+import { PLANS, type PlanKey } from "@/lib/constants/plans";
 import { toast } from "sonner";
 import { CreditCard, Zap, Check, FileText, ExternalLink, TrendingUp } from "lucide-react";
 
@@ -23,48 +23,14 @@ const PLAN_HIGHLIGHTS: Record<string, string[]> = {
 
 export default function BillingSettingsPage() {
   const [currentPlan] = useState<PlanKey>("pro");
-  const [loading, setLoading] = useState<string | null>(null);
+  const [loading] = useState<string | null>(null);
 
-  const handleCheckout = async (priceId: string, planName: string) => {
-    setLoading(planName);
-    try {
-      const res = await fetch("/api/stripe/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error(data.error || "Failed to start checkout");
-      }
-    } catch {
-      toast.error("Failed to start checkout");
-    } finally {
-      setLoading(null);
-    }
+  const handleCheckout = (_planName: string) => {
+    toast.info("Billing coming soon!");
   };
 
-  const handlePortal = async () => {
-    setLoading("portal");
-    try {
-      const res = await fetch("/api/stripe/portal", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({}),
-      });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error(data.error || "Failed to open billing portal");
-      }
-    } catch {
-      toast.error("Failed to open billing portal");
-    } finally {
-      setLoading(null);
-    }
+  const handlePortal = () => {
+    toast.info("Billing portal coming soon!");
   };
 
   const plan = PLANS[currentPlan];
@@ -189,7 +155,7 @@ export default function BillingSettingsPage() {
                       }`}
                       variant={key === "unlimited" ? "outline" : "default"}
                       size="sm"
-                      onClick={() => handleCheckout(p.priceId, key)}
+                      onClick={() => handleCheckout(key)}
                       disabled={loading === key}
                     >
                       {loading === key ? "Loading..." : `Upgrade to ${p.name}`}

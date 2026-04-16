@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/utils/api-auth";
-import { anthropic } from "@/lib/ai/claude";
+import { openai } from "@/lib/ai/openai";
 import { SYSTEM_PROMPTS } from "@/lib/ai/prompts";
 import { z } from "zod";
 
@@ -34,17 +34,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // Generate page with Claude
+    // Generate page with OpenAI
     const userPrompt = `Create a landing page for: ${prompt}${industry ? `\nIndustry: ${industry}` : ""}${tone ? `\nTone: ${tone}` : ""}`;
 
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 4096,
-      system: SYSTEM_PROMPTS.pageGenerator,
-      messages: [{ role: "user", content: userPrompt }],
+      messages: [
+        { role: "system", content: SYSTEM_PROMPTS.pageGenerator },
+        { role: "user", content: userPrompt },
+      ],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
+    const text = completion.choices[0]?.message?.content || "";
 
     // Parse JSON from response
     let blocks;

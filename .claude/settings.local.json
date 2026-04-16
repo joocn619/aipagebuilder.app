@@ -6,7 +6,8 @@
       "Bash(npx shadcn@latest add avatar alert-dialog table skeleton progress --yes)",
       "Bash(sed -i 's/import { useEffect, useState } from \"react\";/import { useState } from \"react\";/' \"app/\\(dashboard\\)/analytics/sessions/page.tsx\")",
       "Bash(sed -i 's/import { useEffect, useState } from \"react\";/import { useState } from \"react\";/' \"app/\\(dashboard\\)/analytics/[pageId]/page.tsx\")",
-      "Bash(wc -l supabase/migrations/*.sql supabase/seed/*.sql)"
+      "Bash(wc -l supabase/migrations/*.sql supabase/seed/*.sql)",
+      "Bash(npm uninstall *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\trend\\OneDrive\\Desktop\\Codex\\test\\PageForge\\app\\(editor)\\editor",

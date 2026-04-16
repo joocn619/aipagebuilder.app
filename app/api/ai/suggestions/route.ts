@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/utils/api-auth";
-import { anthropic } from "@/lib/ai/claude";
+import { openai } from "@/lib/ai/openai";
 import { SYSTEM_PROMPTS } from "@/lib/ai/prompts";
 import { z } from "zod";
 
@@ -19,11 +19,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid blocks data" }, { status: 400 });
     }
 
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 1024,
-      system: SYSTEM_PROMPTS.pageSuggestions,
       messages: [
+        { role: "system", content: SYSTEM_PROMPTS.pageSuggestions },
         {
           role: "user",
           content: `Analyze these page blocks and suggest improvements:\n${JSON.stringify(parsed.data.blocks, null, 2)}`,
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       ],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
+    const text = completion.choices[0]?.message?.content || "";
 
     let result;
     try {

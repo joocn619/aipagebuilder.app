@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/utils/api-auth";
-import { anthropic } from "@/lib/ai/claude";
+import { openai } from "@/lib/ai/openai";
 import { SYSTEM_PROMPTS } from "@/lib/ai/prompts";
 
 export async function POST(request: Request) {
@@ -29,20 +29,20 @@ export async function POST(request: Request) {
     // Convert to base64
     const bytes = await file.arrayBuffer();
     const base64 = Buffer.from(bytes).toString("base64");
-    const mediaType = file.type as "image/png" | "image/jpeg" | "image/webp" | "image/gif";
+    const mediaType = file.type;
 
-    // Send to Claude Vision
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+    // Send to GPT-4o Vision
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
       max_tokens: 4096,
-      system: SYSTEM_PROMPTS.imageToLayout,
       messages: [
+        { role: "system", content: SYSTEM_PROMPTS.imageToLayout },
         {
           role: "user",
           content: [
             {
-              type: "image",
-              source: { type: "base64", media_type: mediaType, data: base64 },
+              type: "image_url",
+              image_url: { url: `data:${mediaType};base64,${base64}` },
             },
             {
               type: "text",
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       ],
     });
 
-    const text = message.content[0].type === "text" ? message.content[0].text : "";
+    const text = completion.choices[0]?.message?.content || "";
 
     let blocks;
     try {

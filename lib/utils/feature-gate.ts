@@ -1,4 +1,4 @@
-import { PLANS, type PlanKey } from "@/lib/stripe/plans";
+import { PLANS, type PlanKey } from "@/lib/constants/plans";
 
 export function canUseFeature(plan: PlanKey, feature: keyof typeof PLANS.free.limits): boolean {
   const limits = PLANS[plan]?.limits;
