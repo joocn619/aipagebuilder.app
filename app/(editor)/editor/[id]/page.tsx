@@ -11,6 +11,7 @@ import { AIPanel } from "@/components/editor/AIPanel";
 import { useEditorShortcuts } from "@/lib/hooks/use-editor-shortcuts";
 import { useAutoSave } from "@/lib/hooks/use-auto-save";
 import { toast } from "sonner";
+import { TEMPLATE_DATA } from "@/lib/constants/templates";
 
 // Demo blocks for development
 const DEMO_BLOCKS: EditorBlock[] = [
@@ -99,17 +100,15 @@ export default function EditPagePage() {
   const [templateBrowserOpen, setTemplateBrowserOpen] = useState(false);
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
 
-  // Load page data — use pending template from localStorage if available
+  // Load page data — check sessionStorage for a pending template ID first
   useEffect(() => {
-    const raw = localStorage.getItem("pending_template");
-    if (raw) {
-      try {
-        const tpl = JSON.parse(raw);
-        localStorage.removeItem("pending_template");
+    const templateId = sessionStorage.getItem("pending_template_id");
+    if (templateId) {
+      const tpl = TEMPLATE_DATA.find((t) => t.id === templateId);
+      if (tpl) {
+        sessionStorage.removeItem("pending_template_id");
         setPage(pageId, tpl.name, tpl.name.toLowerCase().replace(/\s+/g, "-"), tpl.blocks, tpl.globalStyles);
         return;
-      } catch {
-        // fall through to demo
       }
     }
     setPage(pageId, "My Landing Page", "my-landing-page", DEMO_BLOCKS, DEMO_GLOBAL_STYLES);

@@ -59,10 +59,7 @@ export default function DashboardTemplatesPage() {
       toast.error("Upgrade to Pro to use this template");
       return;
     }
-    const full = TEMPLATE_DATA.find((t) => t.id === template.id);
-    if (full) {
-      localStorage.setItem("pending_template", JSON.stringify(full));
-    }
+    sessionStorage.setItem("pending_template_id", template.id);
     toast.success(`Opening "${template.name}" template...`);
     router.push(`/editor/${Date.now()}`);
   };
