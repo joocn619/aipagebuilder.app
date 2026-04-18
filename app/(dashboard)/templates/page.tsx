@@ -6,40 +6,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-
-interface Template {
-  id: string;
-  name: string;
-  category: string;
-  description: string;
-  blocks: number;
-  emoji: string;
-  tags: string[];
-  isPro: boolean;
-}
+import { TEMPLATE_DATA } from "@/lib/constants/templates";
 
 const CATEGORIES = ["All", "Landing Page", "SaaS", "Agency", "E-commerce", "Portfolio", "Blog", "Event", "Coming Soon"];
 
-const TEMPLATES: Template[] = [
-  { id: "t1", name: "SaaS Hero", category: "SaaS", description: "Clean SaaS landing with hero, features, pricing, and CTA.", blocks: 8, emoji: "🚀", tags: ["minimal", "modern"], isPro: false },
-  { id: "t2", name: "Agency Pro", category: "Agency", description: "Full agency site with portfolio, services, team, and contact.", blocks: 12, emoji: "🏢", tags: ["professional", "bold"], isPro: false },
-  { id: "t3", name: "Product Launch", category: "Landing Page", description: "High-converting product launch page with countdown and waitlist.", blocks: 9, emoji: "⚡", tags: ["launch", "conversion"], isPro: false },
-  { id: "t4", name: "E-commerce Store", category: "E-commerce", description: "Product showcase with gallery, reviews, and buy buttons.", blocks: 11, emoji: "🛍️", tags: ["shop", "products"], isPro: true },
-  { id: "t5", name: "Portfolio Minimal", category: "Portfolio", description: "Clean portfolio with work showcase and contact form.", blocks: 7, emoji: "🎨", tags: ["minimal", "creative"], isPro: false },
-  { id: "t6", name: "Coming Soon", category: "Coming Soon", description: "Countdown timer, email capture, and social links.", blocks: 4, emoji: "🔒", tags: ["countdown", "waitlist"], isPro: false },
-  { id: "t7", name: "Blog Home", category: "Blog", description: "Blog homepage with featured posts, categories, and newsletter.", blocks: 8, emoji: "✍️", tags: ["blog", "content"], isPro: false },
-  { id: "t8", name: "Event Page", category: "Event", description: "Event landing with schedule, speakers, and ticket CTA.", blocks: 10, emoji: "🎤", tags: ["event", "tickets"], isPro: true },
-  { id: "t9", name: "Startup Dark", category: "SaaS", description: "Dark-themed startup page with bold gradients and social proof.", blocks: 9, emoji: "🌑", tags: ["dark", "bold"], isPro: true },
-  { id: "t10", name: "Freelancer", category: "Portfolio", description: "Personal freelancer page with skills, rates, and booking.", blocks: 8, emoji: "💼", tags: ["freelance", "personal"], isPro: false },
-  { id: "t11", name: "App Download", category: "Landing Page", description: "Mobile app landing with screenshots, features, and download CTA.", blocks: 7, emoji: "📱", tags: ["app", "mobile"], isPro: false },
-  { id: "t12", name: "Consulting", category: "Agency", description: "B2B consulting with case studies, process, and lead form.", blocks: 11, emoji: "📊", tags: ["b2b", "consulting"], isPro: true },
-  { id: "t13", name: "Restaurant", category: "E-commerce", description: "Restaurant page with menu, gallery, reservations, and map.", blocks: 9, emoji: "🍽️", tags: ["food", "local"], isPro: false },
-  { id: "t14", name: "Course Landing", category: "Landing Page", description: "Online course page with curriculum, instructor bio, and pricing.", blocks: 10, emoji: "🎓", tags: ["education", "course"], isPro: true },
-  { id: "t15", name: "Newsletter", category: "Coming Soon", description: "Newsletter signup with social proof and preview samples.", blocks: 5, emoji: "📧", tags: ["email", "newsletter"], isPro: false },
-  { id: "t16", name: "SaaS Pricing", category: "SaaS", description: "Detailed pricing page with comparison table and FAQ.", blocks: 6, emoji: "💰", tags: ["pricing", "saas"], isPro: false },
-  { id: "t17", name: "Digital Agency", category: "Agency", description: "Creative agency with animated hero, work, and awards.", blocks: 13, emoji: "✨", tags: ["creative", "animated"], isPro: true },
-  { id: "t18", name: "Lead Magnet", category: "Landing Page", description: "Lead magnet squeeze page with form and social proof.", blocks: 5, emoji: "🧲", tags: ["leads", "conversion"], isPro: false },
-];
+const TEMPLATES = TEMPLATE_DATA.map((t) => ({
+  id: t.id,
+  name: t.name,
+  category: t.category,
+  description: t.description,
+  blocks: t.blocks.length,
+  emoji: t.emoji,
+  tags: t.tags,
+  isPro: t.isPro,
+}));
 
 const COLORS: Record<string, string> = {
   "SaaS": "bg-violet-500/10 text-violet-600 border-violet-200",
@@ -74,12 +54,16 @@ export default function DashboardTemplatesPage() {
     return matchCat && matchSearch;
   });
 
-  const applyTemplate = (template: Template) => {
+  const applyTemplate = (template: (typeof TEMPLATES)[number]) => {
     if (template.isPro) {
       toast.error("Upgrade to Pro to use this template");
       return;
     }
-    toast.success(`"${template.name}" template applied!`);
+    const full = TEMPLATE_DATA.find((t) => t.id === template.id);
+    if (full) {
+      localStorage.setItem("pending_template", JSON.stringify(full));
+    }
+    toast.success(`Opening "${template.name}" template...`);
     router.push(`/editor/${Date.now()}`);
   };
 

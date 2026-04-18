@@ -99,17 +99,20 @@ export default function EditPagePage() {
   const [templateBrowserOpen, setTemplateBrowserOpen] = useState(false);
   const [aiPanelOpen, setAiPanelOpen] = useState(false);
 
-  // Load page data
+  // Load page data — use pending template from localStorage if available
   useEffect(() => {
-    // TODO: Fetch from Supabase in Phase 4
-    // For now, use demo blocks
-    setPage(
-      pageId,
-      "My Landing Page",
-      "my-landing-page",
-      DEMO_BLOCKS,
-      DEMO_GLOBAL_STYLES
-    );
+    const raw = localStorage.getItem("pending_template");
+    if (raw) {
+      try {
+        const tpl = JSON.parse(raw);
+        localStorage.removeItem("pending_template");
+        setPage(pageId, tpl.name, tpl.name.toLowerCase().replace(/\s+/g, "-"), tpl.blocks, tpl.globalStyles);
+        return;
+      } catch {
+        // fall through to demo
+      }
+    }
+    setPage(pageId, "My Landing Page", "my-landing-page", DEMO_BLOCKS, DEMO_GLOBAL_STYLES);
   }, [pageId, setPage]);
 
   // Save function
