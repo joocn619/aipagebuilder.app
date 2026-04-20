@@ -59,9 +59,8 @@ export default function DashboardTemplatesPage() {
       toast.error("Upgrade to Pro to use this template");
       return;
     }
-    sessionStorage.setItem("pending_template_id", template.id);
     toast.success(`Opening "${template.name}" template...`);
-    router.push(`/editor/${Date.now()}`);
+    router.push(`/editor/tpl-${template.id}`);
   };
 
   return (
