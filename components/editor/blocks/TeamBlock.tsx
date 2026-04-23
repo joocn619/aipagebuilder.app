@@ -28,7 +28,7 @@ export function TeamBlock({ block, globalStyles, isEditing, onContentChange }: P
       )}
       <div className={`grid grid-cols-1 gap-6 ${cols}`}>
         {(c.members || []).map((m, i) => (
-          <div key={i} className="group rounded-2xl border bg-card p-6 text-center shadow-sm transition-all hover:shadow-md">
+          <div key={i} className="group rounded-2xl border border-white/10 p-6 text-center shadow-sm transition-all hover:shadow-md" style={{ background: "rgba(255,255,255,0.04)" }}>
             {/* Avatar */}
             <div className="mx-auto mb-4 h-20 w-20 overflow-hidden rounded-2xl">
               {m.photoUrl ? (
@@ -42,7 +42,7 @@ export function TeamBlock({ block, globalStyles, isEditing, onContentChange }: P
             </div>
             <h3 className="font-bold">{m.name}</h3>
             <p className="mt-0.5 text-sm font-medium" style={{ color: globalStyles.primaryColor }}>{m.role}</p>
-            {m.bio && <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{m.bio}</p>}
+            {m.bio && <p className="mt-3 text-xs leading-relaxed text-white/50">{m.bio}</p>}
           </div>
         ))}
       </div>

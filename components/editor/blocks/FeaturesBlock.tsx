@@ -12,15 +12,6 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?:
   database: Database, cloud: Cloud, sparkles: Sparkles,
 };
 
-function isDarkText(col?: string): boolean {
-  if (!col) return false;
-  const hex = col.replace("#", "");
-  if (hex.length < 6) return false;
-  const r = parseInt(hex.slice(0, 2), 16) / 255;
-  const g = parseInt(hex.slice(2, 4), 16) / 255;
-  const b = parseInt(hex.slice(4, 6), 16) / 255;
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.45;
-}
 
 interface Feature { icon?: string; title: string; description: string; }
 interface Props { block: EditorBlock; globalStyles: GlobalStyles; isEditing?: boolean; onContentChange?: (content: Record<string, unknown>) => void; }
@@ -29,14 +20,14 @@ export function FeaturesBlock({ block, globalStyles, isEditing, onContentChange 
   const c = block.content as { heading?: string; subheading?: string; layout?: string; columns?: number; features?: Feature[]; };
   const primary = globalStyles.primaryColor || "#7c3aed";
   const textCol = block.styles.textColor;
-  const lightBg = textCol ? isDarkText(textCol) : false;
+  const isBento = (c.features?.length || 0) === 5 && c.columns !== 4;
   const cols = c.columns === 2 ? "md:grid-cols-2" : c.columns === 4 ? "md:grid-cols-4" : "md:grid-cols-3";
 
-  const cardBg = lightBg ? "#ffffff" : undefined;
-  const cardBorder = lightBg ? "rgba(226,232,240,1)" : textCol ? textCol + "15" : undefined;
-  const titleColor = textCol || "inherit";
-  const descColor = textCol ? textCol + "80" : "rgba(100,116,139,1)";
-  const subheadColor = textCol ? textCol + "99" : "rgba(100,116,139,1)";
+  const cardBg = `linear-gradient(135deg, ${primary}16, rgba(255,255,255,0.045))`;
+  const cardBorder = textCol ? textCol + "20" : primary + "24";
+  const titleColor = textCol || "#f1f5f9";
+  const descColor = textCol ? textCol + "80" : "rgba(148,163,184,1)";
+  const subheadColor = textCol ? textCol + "99" : "rgba(148,163,184,1)";
 
   return (
     <div>
@@ -54,19 +45,27 @@ export function FeaturesBlock({ block, globalStyles, isEditing, onContentChange 
           )}
         </div>
       )}
-      <div className={`grid grid-cols-1 gap-6 ${cols}`}>
+      <div className={`grid grid-cols-1 gap-5 ${cols}`}>
         {(c.features || []).map((feat, i) => {
           const IconComponent = ICON_MAP[feat.icon?.toLowerCase() || ""] || Zap;
           return (
             <div key={i}
-              className="group relative rounded-2xl border p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
-              style={{ background: cardBg, borderColor: cardBorder }}>
-              <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl"
-                style={{ backgroundColor: primary + "15" }}>
+              className={[
+                "group relative overflow-hidden rounded-[1.65rem] border p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+                isBento && i === 0 ? "md:col-span-2" : "",
+              ].filter(Boolean).join(" ")}
+              style={{ background: cardBg, borderColor: cardBorder, boxShadow: `0 18px 45px ${primary}10` }}>
+              <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-0 blur-3xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ background: primary }} />
+              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl border"
+                style={{ backgroundColor: primary + "16", borderColor: primary + "22" }}>
                 <IconComponent className="h-5 w-5" style={{ color: primary }} />
               </div>
-              <h3 className="mb-2 text-base font-semibold leading-snug" style={{ color: titleColor }}>{feat.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: descColor }}>{feat.description}</p>
+              <div className="relative">
+                <div className="mb-3 h-0.5 w-10 rounded-full" style={{ background: primary }} />
+                <h3 className="mb-2 text-lg font-bold leading-snug tracking-tight" style={{ color: titleColor }}>{feat.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: descColor }}>{feat.description}</p>
+              </div>
             </div>
           );
         })}

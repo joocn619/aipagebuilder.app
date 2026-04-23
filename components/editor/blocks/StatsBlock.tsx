@@ -35,11 +35,13 @@ function AnimatedStat({ stat, primary, textCol, delay }: { stat: Stat; primary: 
     return () => obs.disconnect();
   }, []);
 
+  const decimals = String(stat.value).includes(".") ? String(stat.value).split(".")[1].length : 0;
   const fmt = (n: number) => {
-    if (stat.value >= 1000000) return (n / 1000000).toFixed(n >= stat.value && stat.value % 1000000 === 0 ? 0 : 1) + "M";
-    if (stat.value >= 1000) return (n / 1000).toFixed(n >= stat.value && stat.value % 1000 === 0 ? 0 : 1) + "k";
-    if (!Number.isInteger(stat.value)) return n.toFixed(1);
-    return Math.floor(n).toLocaleString();
+    const v = Math.min(n, stat.value);
+    if (stat.value >= 1_000_000) return (v / 1_000_000).toFixed(1) + "M";
+    if (stat.value >= 1_000) return (v / 1_000).toFixed(1) + "k";
+    if (decimals > 0) return v.toFixed(decimals);
+    return Math.floor(v).toLocaleString();
   };
 
   return (
@@ -47,7 +49,7 @@ function AnimatedStat({ stat, primary, textCol, delay }: { stat: Stat; primary: 
       <div className="text-4xl font-extrabold tabular-nums md:text-5xl lg:text-6xl" style={{ color: textCol || primary }}>
         {stat.prefix}{fmt(count)}{stat.suffix}
       </div>
-      <div className="text-sm font-medium" style={{ color: textCol ? textCol + "99" : "rgba(100,116,139,1)" }}>
+      <div className="text-sm font-medium" style={{ color: textCol ? textCol + "99" : "rgba(203,213,225,0.8)" }}>
         {stat.label}
       </div>
       <div className="mt-1 h-0.5 w-8 rounded-full opacity-40" style={{ backgroundColor: textCol || primary }} />

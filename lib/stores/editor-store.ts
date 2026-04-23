@@ -253,6 +253,60 @@ export function getDefaultBlockContent(type: string): Record<string, unknown> {
         { title: "Section 2", content: "Content here" },
       ],
     },
+    "problem-solution": {
+      eyebrow: "Why it matters",
+      heading: "Replace the old way with a clearer path",
+      subheading: "Show the pain your audience feels, then position your offer as the modern answer.",
+      problemTitle: "The old way",
+      solutionTitle: "The better way",
+      problems: [
+        { title: "Too many moving parts", description: "Customers are juggling manual work, scattered tools, and unclear next steps." },
+        { title: "No clear proof", description: "The page does not show enough trust, urgency, or relevant outcomes." },
+      ],
+      solutions: [
+        { title: "One guided experience", description: "A focused journey moves visitors from pain to value to action." },
+        { title: "Proof at every step", description: "Benefits, process, case studies, and guarantees reduce risk before the CTA." },
+      ],
+    },
+    process: {
+      eyebrow: "How it works",
+      heading: "A simple process from interest to outcome",
+      subheading: "Break the conversion journey into clear steps so visitors know exactly what happens next.",
+      steps: [
+        { badge: "Step 1", title: "Choose your goal", description: "Start with the outcome your visitor wants most." },
+        { badge: "Step 2", title: "Follow the plan", description: "Show the guided process, timeline, and support." },
+        { badge: "Step 3", title: "Launch with confidence", description: "End with a measurable result and low-risk CTA." },
+      ],
+    },
+    "case-studies": {
+      eyebrow: "Proof",
+      heading: "Results that make the promise believable",
+      subheading: "Use concrete examples to show how similar customers got meaningful outcomes.",
+      cases: [
+        { client: "Customer A", title: "From stuck to shipped", result: "+42%", description: "A focused page and clearer offer helped the team convert more qualified visitors." },
+        { client: "Customer B", title: "Less friction, more action", result: "2.8x", description: "Better proof, pricing, and CTA placement improved decision speed." },
+        { client: "Customer C", title: "A premium experience", result: "14 days", description: "The full launch system went from idea to live campaign in two weeks." },
+      ],
+    },
+    integrations: {
+      eyebrow: "Connected workflow",
+      heading: "Fits the tools your audience already uses",
+      subheading: "Show platforms, channels, or ecosystem touchpoints that make adoption feel easy.",
+      tools: ["Stripe", "Slack", "HubSpot", "Zapier", "Notion", "Google Analytics"],
+      note: "Use this section for integrations, sales channels, booking platforms, marketplaces, or community destinations.",
+    },
+    guarantee: {
+      eyebrow: "Low-risk decision",
+      badge: "Risk reversed",
+      heading: "A confident promise that removes hesitation",
+      subheading: "Pair the final CTA with guarantees, safeguards, compliance notes, or support promises.",
+      points: [
+        { title: "Clear expectations", description: "Visitors know what they get, when they get it, and what happens after signup." },
+        { title: "Human support", description: "Support, onboarding, or guidance is visible before the visitor commits." },
+        { title: "Flexible exit", description: "A refund, cancellation, consultation, or safety promise lowers perceived risk." },
+        { title: "Trusted delivery", description: "Security, quality checks, or expert review reinforce confidence." },
+      ],
+    },
   };
 
   return defaults[type] || {};

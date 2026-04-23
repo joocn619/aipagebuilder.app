@@ -36,7 +36,7 @@ export function EditorToolbar({ onSave, onPublish, onOpenTemplates, onOpenAI }: 
   } = useEditorStore();
 
   return (
-    <div className="flex h-14 items-center justify-between border-b bg-background px-4">
+    <div className="flex h-14 items-center justify-between border-b border-white/5 bg-[#0d0d18] px-4 text-white">
       {/* Left: Page title + status */}
       <div className="flex items-center gap-3">
         <span className="text-sm font-medium">{pageTitle || "Untitled Page"}</span>

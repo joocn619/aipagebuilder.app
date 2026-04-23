@@ -31,4 +31,9 @@ export const BLOCK_TYPES = [
   { id: "comparison", name: "Comparison Table", category: "content" as BlockCategory, isPro: true },
   { id: "tabs", name: "Tabs", category: "content" as BlockCategory, isPro: true },
   { id: "accordion", name: "Accordion", category: "content" as BlockCategory, isPro: true },
+  { id: "problem-solution", name: "Problem/Solution", category: "content" as BlockCategory, isPro: true },
+  { id: "process", name: "Process", category: "content" as BlockCategory, isPro: true },
+  { id: "case-studies", name: "Case Studies", category: "social-proof" as BlockCategory, isPro: true },
+  { id: "integrations", name: "Integrations", category: "advanced" as BlockCategory, isPro: true },
+  { id: "guarantee", name: "Guarantee", category: "conversion" as BlockCategory, isPro: true },
 ] as const;

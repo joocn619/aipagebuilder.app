@@ -14,7 +14,7 @@ export interface TemplateData {
 
 const S = (top = 64, bottom = 64) => ({ paddingTop: top, paddingBottom: bottom, paddingLeft: 24, paddingRight: 24 });
 
-export const TEMPLATE_DATA: TemplateData[] = [
+const RAW_TEMPLATE_DATA: TemplateData[] = [
 
   // ══════════════════════════════════════════════
   // NICHE 1 — SaaS / Software (6 templates)
@@ -1197,6 +1197,512 @@ export const TEMPLATE_DATA: TemplateData[] = [
   },
 
 ];
+
+type TemplateCategory =
+  | "SaaS"
+  | "Agency"
+  | "E-commerce"
+  | "Health"
+  | "Education"
+  | "Local Business"
+  | "Finance"
+  | "Creator";
+
+interface CategoryCopy {
+  audience: string;
+  outcome: string;
+  problemTitle: string;
+  solutionTitle: string;
+  problems: { title: string; description: string }[];
+  solutions: { title: string; description: string }[];
+  steps: { badge: string; title: string; description: string }[];
+  cases: { client: string; title: string; result: string; description: string }[];
+  tools: string[];
+  guarantees: { title: string; description: string }[];
+  comparison: { feature: string; values: string[] }[];
+}
+
+const CATEGORY_COPY: Record<TemplateCategory, CategoryCopy> = {
+  SaaS: {
+    audience: "software buyers",
+    outcome: "higher activation, stronger retention, and a faster path from demo to paid customer",
+    problemTitle: "Why SaaS pages stall",
+    solutionTitle: "A product story that converts",
+    problems: [
+      { title: "Feature lists without context", description: "Visitors see capabilities, but not the workflow or outcome those features create." },
+      { title: "Trust arrives too late", description: "Security, proof, integrations, and pricing clarity are often hidden below the decision point." },
+    ],
+    solutions: [
+      { title: "Outcome-led sections", description: "The page moves from pain to product value, proof, plan, pricing, and action." },
+      { title: "Adoption feels easy", description: "Process, integrations, and guarantee sections remove implementation anxiety before signup." },
+    ],
+    steps: [
+      { badge: "Discover", title: "Map the workflow", description: "Show the specific job your software improves and where it fits in the buyer's day." },
+      { badge: "Activate", title: "Prove the product", description: "Use demo-style sections, measurable benefits, and social proof to build confidence." },
+      { badge: "Expand", title: "Make scale obvious", description: "Surface security, integrations, pricing, and support before the final CTA." },
+    ],
+    cases: [
+      { client: "Growth team", title: "Trial activation improved", result: "+38%", description: "Clear onboarding and proof sections helped more visitors start with the right use case." },
+      { client: "RevOps team", title: "Demo requests became qualified", result: "2.4x", description: "Better problem framing and integrations reduced low-fit leads." },
+      { client: "Product team", title: "Feature adoption accelerated", result: "31 days", description: "A workflow-led page shortened the time from interest to expansion." },
+    ],
+    tools: ["Slack", "Stripe", "HubSpot", "Salesforce", "Zapier", "Notion", "Google SSO", "Segment", "Webhooks"],
+    guarantees: [
+      { title: "14-day trial", description: "Let buyers experience the core workflow before committing." },
+      { title: "Secure by default", description: "Highlight SSO, roles, audit logs, encryption, and compliance-ready practices." },
+      { title: "Migration support", description: "Reduce switching friction with onboarding, import help, and templates." },
+      { title: "Cancel anytime", description: "Lower risk with transparent billing and no lock-in messaging." },
+    ],
+    comparison: [
+      { feature: "Setup time", values: ["Weeks", "Days", "Minutes"] },
+      { feature: "AI guidance", values: ["false", "Limited", "true"] },
+      { feature: "Team workflow", values: ["Manual", "Fragmented", "Unified"] },
+      { feature: "Scale support", values: ["Add-ons", "Enterprise only", "Built in"] },
+    ],
+  },
+  Agency: {
+    audience: "clients",
+    outcome: "better positioning, clearer service value, and more qualified project inquiries",
+    problemTitle: "Why service pages feel generic",
+    solutionTitle: "A client-winning narrative",
+    problems: [
+      { title: "Beautiful work, unclear offer", description: "Visitors admire the visuals but do not understand the process, fit, or business result." },
+      { title: "Proof is scattered", description: "Case studies, testimonials, packages, and team credibility are disconnected." },
+    ],
+    solutions: [
+      { title: "Strategy before visuals", description: "Show how the team diagnoses, designs, launches, and measures client outcomes." },
+      { title: "Proof-led selling", description: "Bring case studies, team expertise, and process into the decision journey." },
+    ],
+    steps: [
+      { badge: "01", title: "Diagnose", description: "Clarify goals, audience, constraints, and the business metric that matters." },
+      { badge: "02", title: "Design the system", description: "Turn strategy into brand, content, campaign, or product experiences." },
+      { badge: "03", title: "Launch and optimize", description: "Ship quickly, measure the impact, and improve what moves revenue." },
+    ],
+    cases: [
+      { client: "B2B SaaS", title: "Repositioned the category story", result: "+64%", description: "A sharper narrative and premium design system increased demo intent." },
+      { client: "Consumer brand", title: "Campaign launch rebuilt", result: "3.1x", description: "New creative direction and landing flow lifted paid conversion." },
+      { client: "Local leader", title: "Trust-first website", result: "+48%", description: "Service clarity and stronger proof increased consultation requests." },
+    ],
+    tools: ["Figma", "Webflow", "Framer", "Shopify", "HubSpot", "Notion", "Slack", "GA4", "Meta Ads"],
+    guarantees: [
+      { title: "Senior-led work", description: "Position expertise and direct access to decision-makers." },
+      { title: "Clear milestones", description: "Show timelines, deliverables, and review points before contact." },
+      { title: "Launch support", description: "Include handoff, training, analytics, and optimization guidance." },
+      { title: "No surprise scope", description: "Reduce risk with transparent packages and approval checkpoints." },
+    ],
+    comparison: [
+      { feature: "Strategy depth", values: ["Light", "Medium", "Senior-led"] },
+      { feature: "Case-study proof", values: ["false", "Some", "true"] },
+      { feature: "Launch support", values: ["Handoff", "Basic", "Ongoing"] },
+      { feature: "Best for", values: ["Small edits", "Projects", "Growth partners"] },
+    ],
+  },
+  "E-commerce": {
+    audience: "buyers",
+    outcome: "more add-to-cart action, higher trust, and stronger purchase confidence",
+    problemTitle: "Why buyers hesitate",
+    solutionTitle: "A purchase path with proof",
+    problems: [
+      { title: "Benefits are not tangible", description: "Buyers see features but cannot feel the before-and-after value." },
+      { title: "Risk feels too high", description: "Shipping, quality, returns, fit, and support concerns block checkout." },
+    ],
+    solutions: [
+      { title: "Product value in context", description: "Use benefits, comparisons, reviews, and use cases to make the product feel real." },
+      { title: "Confidence before checkout", description: "Guarantee, delivery, and proof sections answer objections before the CTA." },
+    ],
+    steps: [
+      { badge: "Pick", title: "Choose the right option", description: "Guide shoppers with use cases, bundles, or plan comparisons." },
+      { badge: "Try", title: "Experience the benefit", description: "Show product details, reviews, and transformations that make value concrete." },
+      { badge: "Love", title: "Buy with confidence", description: "Back the offer with delivery, returns, and support promises." },
+    ],
+    cases: [
+      { client: "Verified buyers", title: "More confident checkout", result: "+27%", description: "Benefit-led copy and stronger guarantees reduced last-step hesitation." },
+      { client: "Repeat shoppers", title: "Bundle adoption increased", result: "1.8x", description: "Clear comparison and pricing sections made premium options easier to choose." },
+      { client: "Launch campaign", title: "First-week sell-through", result: "72%", description: "Urgency and social proof helped convert early demand." },
+    ],
+    tools: ["Shopify", "Klaviyo", "Stripe", "Apple Pay", "PayPal", "Afterpay", "TikTok Shop", "Meta Pixel", "Reviews.io"],
+    guarantees: [
+      { title: "30-day returns", description: "Make the return window visible before the buyer reaches checkout." },
+      { title: "Secure checkout", description: "Show payment safety, trusted processors, and privacy confidence." },
+      { title: "Quality checked", description: "Explain materials, testing, sourcing, or fulfillment standards." },
+      { title: "Fast support", description: "Give shoppers a clear path if sizing, delivery, or product questions come up." },
+    ],
+    comparison: [
+      { feature: "Materials", values: ["Basic", "Premium", "Signature"] },
+      { feature: "Support", values: ["Email", "Priority", "Concierge"] },
+      { feature: "Returns", values: ["14 days", "30 days", "60 days"] },
+      { feature: "Best for", values: ["Trying", "Daily use", "Gifting"] },
+    ],
+  },
+  Health: {
+    audience: "health-conscious customers",
+    outcome: "trust, safe expectations, and more qualified signups or applications",
+    problemTitle: "Why wellness offers need trust",
+    solutionTitle: "A credible path to change",
+    problems: [
+      { title: "Claims can feel vague", description: "Visitors need clear outcomes, realistic timelines, and expert context." },
+      { title: "Safety questions remain", description: "Programs, products, and appointments require reassurance before action." },
+    ],
+    solutions: [
+      { title: "Evidence-led value", description: "Use authority, process, testimonials, and disclaimers to build confidence." },
+      { title: "Guided next step", description: "Make the booking, application, or purchase path feel safe and supported." },
+    ],
+    steps: [
+      { badge: "Assess", title: "Understand the baseline", description: "Start with goals, constraints, habits, or appointment needs." },
+      { badge: "Plan", title: "Build the right protocol", description: "Show the program, class, product routine, or care pathway." },
+      { badge: "Support", title: "Track progress safely", description: "Reinforce accountability, expert review, and realistic expectations." },
+    ],
+    cases: [
+      { client: "Members", title: "Consistency improved", result: "+52%", description: "Clear routines and support expectations helped people stay engaged." },
+      { client: "Clients", title: "Program completion rose", result: "86%", description: "A structured journey and social proof reduced drop-off." },
+      { client: "Patients", title: "Booking friction dropped", result: "-34%", description: "Trust, process, and FAQ sections made next steps clearer." },
+    ],
+    tools: ["Calendly", "Zoom", "Stripe", "Trainerize", "MyFitnessPal", "Google Fit", "Apple Health", "Mindbody", "Email"],
+    guarantees: [
+      { title: "Expert-led guidance", description: "Surface credentials, certifications, or practitioner experience clearly." },
+      { title: "Transparent expectations", description: "Avoid hype by explaining timeline, effort, and who the offer is for." },
+      { title: "Safety-first support", description: "Encourage visitors to consult professionals where appropriate." },
+      { title: "Flexible participation", description: "Clarify cancellation, rescheduling, or program-fit policies." },
+    ],
+    comparison: [
+      { feature: "Support level", values: ["Self-guided", "Group", "1-on-1"] },
+      { feature: "Progress tracking", values: ["Basic", "Weekly", "Personalized"] },
+      { feature: "Best for", values: ["Starters", "Consistency", "Transformation"] },
+      { feature: "Risk guidance", values: ["Limited", "Included", "High-touch"] },
+    ],
+  },
+  Education: {
+    audience: "students and learners",
+    outcome: "clear learning outcomes, stronger enrollment confidence, and lower drop-off",
+    problemTitle: "Why learners delay enrolling",
+    solutionTitle: "A learning path that feels achievable",
+    problems: [
+      { title: "The outcome is unclear", description: "Learners need to know what skill, credential, or transformation they will gain." },
+      { title: "The workload feels risky", description: "Time, support, price, and fit concerns stop committed students from joining." },
+    ],
+    solutions: [
+      { title: "Outcome-first curriculum", description: "Show modules, projects, instructors, and proof of student progress." },
+      { title: "Enrollment without guesswork", description: "Use process, pricing, FAQs, and guarantees to clarify the commitment." },
+    ],
+    steps: [
+      { badge: "Learn", title: "Start with the roadmap", description: "Explain modules, schedule, prerequisites, and the final outcome." },
+      { badge: "Build", title: "Practice with feedback", description: "Show assignments, coaching, community, or project reviews." },
+      { badge: "Launch", title: "Apply the skill", description: "Tie the program to portfolio, career, business, or personal outcomes." },
+    ],
+    cases: [
+      { client: "Student cohort", title: "Completion improved", result: "91%", description: "Clear milestones and support expectations helped learners finish." },
+      { client: "Career switchers", title: "Portfolio-ready projects", result: "6", description: "Project-led curriculum made the outcome easier to evaluate." },
+      { client: "Alumni", title: "Confidence at graduation", result: "+44%", description: "Coaching and proof sections reduced enrollment hesitation." },
+    ],
+    tools: ["Zoom", "Circle", "Discord", "Notion", "Teachable", "Stripe", "Google Meet", "GitHub", "Slack"],
+    guarantees: [
+      { title: "Clear curriculum", description: "Show modules, time commitment, and success criteria before enrollment." },
+      { title: "Support access", description: "Clarify office hours, community, feedback, and instructor availability." },
+      { title: "Outcome proof", description: "Use student stories, portfolios, or results to make value credible." },
+      { title: "Fair refund terms", description: "Include trial lessons, refund windows, or fit checks where relevant." },
+    ],
+    comparison: [
+      { feature: "Format", values: ["Self-paced", "Cohort", "Coached"] },
+      { feature: "Feedback", values: ["Limited", "Weekly", "Personal"] },
+      { feature: "Projects", values: ["1", "3", "6+"] },
+      { feature: "Best for", values: ["Curious", "Committed", "Career-ready"] },
+    ],
+  },
+  "Local Business": {
+    audience: "local customers",
+    outcome: "more calls, bookings, visits, and trust from nearby buyers",
+    problemTitle: "Why local visitors bounce",
+    solutionTitle: "A local-first trust journey",
+    problems: [
+      { title: "Important details are hidden", description: "Hours, services, location, pricing, and booking paths must be immediately clear." },
+      { title: "Trust is not local enough", description: "Reviews, team, neighborhood proof, and service guarantees need to be visible." },
+    ],
+    solutions: [
+      { title: "Book-ready structure", description: "Guide visitors from need to service to proof to appointment." },
+      { title: "Neighborhood credibility", description: "Use reviews, team, process, and contact sections to make the business feel familiar." },
+    ],
+    steps: [
+      { badge: "Call", title: "Choose the service", description: "Make the right service, menu, property, or consultation path easy to find." },
+      { badge: "Visit", title: "Know what to expect", description: "Show process, hours, team, location, and preparation details." },
+      { badge: "Return", title: "Deliver a trusted experience", description: "Use reviews and guarantees to reinforce repeat visits and referrals." },
+    ],
+    cases: [
+      { client: "Local customers", title: "More appointment requests", result: "+39%", description: "Clear services and reviews made booking feel safer." },
+      { client: "Neighborhood search", title: "Call intent increased", result: "2.1x", description: "Location-first proof and service clarity improved local conversion." },
+      { client: "Repeat visitors", title: "Review-driven trust", result: "4.9/5", description: "Visible testimonials and team sections increased confidence." },
+    ],
+    tools: ["Google Maps", "Calendly", "Square", "Yelp", "TripAdvisor", "WhatsApp", "Google Reviews", "OpenTable", "Email"],
+    guarantees: [
+      { title: "Clear booking", description: "Show phone, form, hours, response time, and location details." },
+      { title: "Trusted locally", description: "Feature reviews, years in business, awards, and neighborhood experience." },
+      { title: "Transparent service", description: "Clarify pricing ranges, process, preparation, and what is included." },
+      { title: "Responsive follow-up", description: "Promise clear next steps after booking, inquiry, or visit." },
+    ],
+    comparison: [
+      { feature: "Booking path", values: ["Phone only", "Form", "Instant"] },
+      { feature: "Local proof", values: ["Basic", "Reviews", "Full trust stack"] },
+      { feature: "Service clarity", values: ["List", "Packages", "Guided"] },
+      { feature: "Best for", values: ["Walk-ins", "Appointments", "High intent"] },
+    ],
+  },
+  Finance: {
+    audience: "financial buyers",
+    outcome: "more qualified trust, demo requests, and risk-aware conversions",
+    problemTitle: "Why finance pages require extra proof",
+    solutionTitle: "A trust-first conversion system",
+    problems: [
+      { title: "Risk feels abstract", description: "Visitors need security, compliance, transparency, and measurable outcomes before they act." },
+      { title: "Value is hard to compare", description: "Financial offers must explain ROI, process, safeguards, and fit clearly." },
+    ],
+    solutions: [
+      { title: "Compliance-aware narrative", description: "Bring security, process, proof, and disclaimers into the main page flow." },
+      { title: "Decision-grade clarity", description: "Use comparison, case studies, pricing, and guarantees to support high-consideration buyers." },
+    ],
+    steps: [
+      { badge: "Audit", title: "Understand the financial goal", description: "Clarify risk, opportunity, current tools, and decision criteria." },
+      { badge: "Model", title: "Show the business case", description: "Use proof, ROI framing, and process to make value measurable." },
+      { badge: "Protect", title: "Reduce risk before action", description: "Surface compliance, support, privacy, and transparent terms." },
+    ],
+    cases: [
+      { client: "Finance team", title: "Manual reporting reduced", result: "-61%", description: "A clearer value story helped buyers connect workflow to ROI." },
+      { client: "Sales team", title: "Qualified demos increased", result: "2.7x", description: "Trust and case-study sections filtered stronger prospects." },
+      { client: "Executive buyers", title: "Decision cycle shortened", result: "19 days", description: "Comparison and security proof reduced procurement friction." },
+    ],
+    tools: ["Plaid", "Stripe", "QuickBooks", "Salesforce", "HubSpot", "SOC 2", "SSO", "Looker", "Snowflake"],
+    guarantees: [
+      { title: "Security-first", description: "Highlight encryption, access controls, audit trails, and compliance posture." },
+      { title: "Transparent terms", description: "Clarify pricing, data practices, contracts, and cancellation or consultation steps." },
+      { title: "Expert support", description: "Show onboarding, financial specialists, or implementation guidance." },
+      { title: "Measured outcomes", description: "Tie the offer to ROI, savings, pipeline, or operational performance." },
+    ],
+    comparison: [
+      { feature: "Security posture", values: ["Basic", "Managed", "Enterprise-grade"] },
+      { feature: "Reporting", values: ["Manual", "Dashboard", "Automated"] },
+      { feature: "Implementation", values: ["DIY", "Assisted", "White-glove"] },
+      { feature: "Best for", values: ["Individuals", "Teams", "Organizations"] },
+    ],
+  },
+  Creator: {
+    audience: "subscribers and community members",
+    outcome: "more signups, stronger belonging, and recurring audience engagement",
+    problemTitle: "Why creator pages underperform",
+    solutionTitle: "A page that turns attention into community",
+    problems: [
+      { title: "The value is too vague", description: "Visitors need to know exactly what they receive and why it matters weekly." },
+      { title: "Belonging is missing", description: "Stats, samples, testimonials, and member outcomes must make the audience feel seen." },
+    ],
+    solutions: [
+      { title: "Make the ritual clear", description: "Show cadence, content pillars, samples, and the transformation from joining." },
+      { title: "Turn proof into belonging", description: "Use member stories, audience stats, and pricing to make the community feel active." },
+    ],
+    steps: [
+      { badge: "Join", title: "Subscribe or enter", description: "Make the first step quick, free or low-risk, and emotionally clear." },
+      { badge: "Engage", title: "Experience the rhythm", description: "Show episodes, issues, events, channels, or content drops." },
+      { badge: "Belong", title: "Grow with the audience", description: "Use proof, member outcomes, and upgrade paths to support retention." },
+    ],
+    cases: [
+      { client: "Subscribers", title: "Weekly engagement rose", result: "+46%", description: "Clear content pillars made the audience understand the value faster." },
+      { client: "Members", title: "Paid upgrades increased", result: "2.2x", description: "Benefit-led membership sections made premium access easier to evaluate." },
+      { client: "Sponsors", title: "Audience fit improved", result: "4.8/5", description: "A stronger proof stack helped sponsors trust the audience quality." },
+    ],
+    tools: ["Substack", "Spotify", "Apple Podcasts", "Discord", "Circle", "YouTube", "ConvertKit", "Patreon", "Beehiiv"],
+    guarantees: [
+      { title: "No spam", description: "Clarify cadence, unsubscribe terms, and privacy before signup." },
+      { title: "Real value", description: "Preview examples, member benefits, and recurring content themes." },
+      { title: "Community standards", description: "Show moderation, code of conduct, and safe participation promises." },
+      { title: "Flexible membership", description: "Make free, paid, and cancellation paths simple." },
+    ],
+    comparison: [
+      { feature: "Access", values: ["Free", "Member", "Founding"] },
+      { feature: "Community", values: ["Read-only", "Full access", "Private group"] },
+      { feature: "Bonus content", values: ["false", "Monthly", "Weekly"] },
+      { feature: "Best for", values: ["Curious", "Committed", "Power users"] },
+    ],
+  },
+};
+
+const ENHANCEMENT_ORDER: Record<TemplateCategory, Array<EditorBlock["type"]>> = {
+  SaaS: ["problem-solution", "process", "integrations", "guarantee", "case-studies", "comparison"],
+  Agency: ["case-studies", "process", "problem-solution", "guarantee", "integrations", "comparison"],
+  "E-commerce": ["problem-solution", "comparison", "guarantee", "process", "case-studies", "integrations"],
+  Health: ["problem-solution", "process", "guarantee", "case-studies", "comparison", "integrations"],
+  Education: ["process", "problem-solution", "case-studies", "guarantee", "comparison", "integrations"],
+  "Local Business": ["problem-solution", "process", "guarantee", "case-studies", "integrations", "comparison"],
+  Finance: ["problem-solution", "process", "guarantee", "case-studies", "comparison", "integrations"],
+  Creator: ["problem-solution", "process", "case-studies", "guarantee", "integrations", "comparison"],
+};
+
+const RICH_TAGS = ["full-page", "2026", "conversion"];
+
+function isTemplateCategory(category: string): category is TemplateCategory {
+  return category in CATEGORY_COPY;
+}
+
+function enhancedStyle(template: TemplateData, index: number): EditorBlock["styles"] {
+  const primary = template.globalStyles.primaryColor;
+  const secondary = template.globalStyles.secondaryColor;
+  const darkCategories = ["SaaS", "Finance", "Creator"];
+  const dark = darkCategories.includes(template.category);
+  const lightBg = index % 2 === 0 ? "#f8fafc" : "#ffffff";
+  const darkBg = index % 2 === 0 ? secondary : "#020617";
+
+  return {
+    ...S(84, 84),
+    backgroundColor: dark ? darkBg : lightBg,
+    textColor: dark ? "#f8fafc" : "#111827",
+    gradient: dark
+      ? `radial-gradient(circle at 15% 0%, ${primary}30, transparent 34%), linear-gradient(135deg, ${darkBg}, ${secondary})`
+      : `radial-gradient(circle at 85% 0%, ${primary}18, transparent 32%), linear-gradient(135deg, ${lightBg}, #ffffff)`,
+    borderRadius: 0,
+    boxShadow: index % 3 === 0 ? `inset 0 1px 0 ${primary}18` : undefined,
+    animation: "slide-up",
+    animationDelay: (index % 4) * 80,
+    animationDuration: 650,
+  };
+}
+
+function withMotion(block: EditorBlock, index: number): EditorBlock {
+  if (block.type === "header" || block.type === "footer") return block;
+  return {
+    ...block,
+    styles: {
+      ...block.styles,
+      animation: block.styles.animation || (index % 3 === 0 ? "fade-in" : "slide-up"),
+      animationDelay: block.styles.animationDelay ?? Math.min(index * 45, 360),
+      animationDuration: block.styles.animationDuration ?? 620,
+      hoverEffect: block.styles.hoverEffect || (["features", "pricing", "testimonials", "case-studies"].includes(block.type) ? "lift" : "none"),
+    },
+  };
+}
+
+function makeEnhancementBlock(template: TemplateData, type: EditorBlock["type"], sequence: number): EditorBlock {
+  const category = isTemplateCategory(template.category) ? template.category : "SaaS";
+  const copy = CATEGORY_COPY[category];
+  const prefix = `${template.id}-complete-${sequence}`;
+  const name = template.name;
+
+  if (type === "problem-solution") {
+    return {
+      id: `${prefix}-problem`,
+      type,
+      styles: enhancedStyle(template, sequence),
+      content: {
+        eyebrow: `${category} conversion gap`,
+        heading: `${name}: solve the hesitation before the CTA`,
+        subheading: `A complete ${category.toLowerCase()} template needs to show the problem, the better path, and why the visitor should act now.`,
+        problemTitle: copy.problemTitle,
+        solutionTitle: copy.solutionTitle,
+        problems: copy.problems,
+        solutions: copy.solutions,
+      },
+    };
+  }
+
+  if (type === "process") {
+    return {
+      id: `${prefix}-process`,
+      type,
+      styles: enhancedStyle(template, sequence),
+      content: {
+        eyebrow: "Conversion journey",
+        heading: `How ${name} moves ${copy.audience} from interest to action`,
+        subheading: `The structure is designed around ${copy.outcome}.`,
+        steps: copy.steps,
+      },
+    };
+  }
+
+  if (type === "case-studies") {
+    return {
+      id: `${prefix}-cases`,
+      type,
+      styles: enhancedStyle(template, sequence),
+      content: {
+        eyebrow: "Proof stack",
+        heading: `Proof points built for ${name}`,
+        subheading: "Case-study style cards make the promise specific, measurable, and easier to trust.",
+        cases: copy.cases,
+      },
+    };
+  }
+
+  if (type === "integrations") {
+    return {
+      id: `${prefix}-ecosystem`,
+      type,
+      styles: enhancedStyle(template, sequence),
+      content: {
+        eyebrow: "Ecosystem",
+        heading: `${name} fits the channels your audience already trusts`,
+        subheading: "Use this section to make adoption, booking, checkout, enrollment, or community participation feel frictionless.",
+        tools: copy.tools,
+        note: `For ${category.toLowerCase()} pages, ecosystem proof reduces the feeling of starting from scratch.`,
+      },
+    };
+  }
+
+  if (type === "guarantee") {
+    return {
+      id: `${prefix}-guarantee`,
+      type,
+      styles: enhancedStyle(template, sequence),
+      content: {
+        eyebrow: "Decision safety",
+        badge: "Confidence layer",
+        heading: `A safer next step for ${copy.audience}`,
+        subheading: "This section reverses risk with clear terms, support expectations, and trust signals near the final CTA.",
+        points: copy.guarantees,
+      },
+    };
+  }
+
+  return {
+    id: `${prefix}-comparison`,
+    type: "comparison",
+    styles: enhancedStyle(template, sequence),
+    content: {
+      heading: `${name} comparison framework`,
+      columns: ["Basic page", "Good page", "Complete 2026 template"],
+      rows: copy.comparison,
+    },
+  };
+}
+
+function insertBeforeTerminalBlocks(blocks: EditorBlock[], additions: EditorBlock[]): EditorBlock[] {
+  const terminalIndex = blocks.findIndex((block) => block.type === "cta" || block.type === "footer");
+  if (terminalIndex === -1) return [...blocks, ...additions];
+  return [
+    ...blocks.slice(0, terminalIndex),
+    ...additions,
+    ...blocks.slice(terminalIndex),
+  ];
+}
+
+function completeTemplate(template: TemplateData): TemplateData {
+  const targetSections = 12;
+  const category = isTemplateCategory(template.category) ? template.category : "SaaS";
+  const existingBlocks = template.blocks.map(withMotion);
+  const slotsNeeded = Math.max(0, targetSections - existingBlocks.length);
+  const additions = ENHANCEMENT_ORDER[category]
+    .filter((type) => !existingBlocks.some((block) => block.type === type))
+    .slice(0, slotsNeeded)
+    .map((type, index) => makeEnhancementBlock(template, type, index));
+
+  const blocks = insertBeforeTerminalBlocks(existingBlocks, additions);
+  const tags = Array.from(new Set([...template.tags, ...RICH_TAGS]));
+  const description = template.description.startsWith("Complete")
+    ? template.description
+    : `Complete ${template.category} template with ${blocks.length} conversion-focused sections, premium proof flow, and 2026-ready motion styling.`;
+
+  return {
+    ...template,
+    description,
+    tags,
+    blocks,
+  };
+}
+
+export const TEMPLATE_DATA: TemplateData[] = RAW_TEMPLATE_DATA.map(completeTemplate);
 
 export function getTemplateById(id: string): TemplateData | undefined {
   return TEMPLATE_DATA.find((t) => t.id === id);

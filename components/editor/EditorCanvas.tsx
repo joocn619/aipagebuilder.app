@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   DndContext,
   closestCenter,
@@ -122,7 +122,8 @@ function SortableBlock({ block }: { block: EditorBlock }) {
 // ============================================
 
 export function EditorCanvas() {
-  const { blocks, moveBlock, selectBlock, previewMode, zoom } =
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { blocks, moveBlock, selectBlock, previewMode, zoom, pageId } =
     useEditorStore();
 
   const sensors = useSensors(
@@ -145,14 +146,21 @@ export function EditorCanvas() {
   const canvasWidth =
     previewMode === "mobile" ? 375 : previewMode === "tablet" ? 768 : "100%";
 
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, left: 0 });
+  }, [pageId]);
+
   return (
     <div
-      className="flex-1 overflow-auto bg-muted/30 p-8"
+      ref={scrollRef}
+      className="flex-1 overflow-auto p-8"
+      style={{ backgroundColor: "#0d0d18" }}
       onClick={() => selectBlock(null)}
     >
       <div
-        className="mx-auto min-h-[600px] bg-background shadow-sm transition-all"
+        className="mx-auto min-h-[600px] shadow-sm transition-all"
         style={{
+          backgroundColor: "#0a0a14",
           width: canvasWidth,
           maxWidth: "100%",
           transform: `scale(${zoom / 100})`,
@@ -160,7 +168,7 @@ export function EditorCanvas() {
         }}
       >
         {blocks.length === 0 ? (
-          <div className="flex min-h-[400px] items-center justify-center text-muted-foreground">
+          <div className="flex min-h-[400px] items-center justify-center text-white/40">
             <div className="text-center">
               <p className="text-lg font-medium">No blocks yet</p>
               <p className="mt-1 text-sm">

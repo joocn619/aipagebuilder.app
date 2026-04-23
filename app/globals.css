@@ -67,6 +67,19 @@
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes pf-slide-left {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pf-zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pf-bounce-subtle {
+  0%   { opacity: 0; transform: translateY(24px) scale(0.98); }
+  70%  { opacity: 1; transform: translateY(-4px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 @keyframes pf-float {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
   50%       { transform: translateY(-14px) rotate(2deg); }
@@ -91,6 +104,9 @@
 
 .pf-fade-up       { animation: pf-fade-up 0.65s ease-out both; }
 .pf-fade-in       { animation: pf-fade-in 0.5s ease-out both; }
+.pf-slide-left    { animation: pf-slide-left 0.65s ease-out both; }
+.pf-zoom-in       { animation: pf-zoom-in 0.55s ease-out both; }
+.pf-bounce-subtle { animation: pf-bounce-subtle 0.72s ease-out both; }
 .pf-float         { animation: pf-float 4s ease-in-out infinite; }
 .pf-shimmer-text  {
   background-size: 200% auto;

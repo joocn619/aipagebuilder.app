@@ -52,7 +52,7 @@ export function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSideb
   return (
     <aside
       className={cn(
-        "flex w-64 shrink-0 flex-col border-r border-white/5 bg-[#0d0d18]",
+        "flex w-64 shrink-0 flex-col border-r border-white/5 bg-[#0d0d18] md:h-screen",
         // Desktop: always visible, static
         "md:relative md:translate-x-0",
         // Mobile: fixed overlay, slides in/out
@@ -69,11 +69,12 @@ export function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSideb
           <span className="font-bold text-white text-sm">AIPageBuilder</span>
         </Link>
         <div className="flex items-center gap-1">
-          <button className="flex items-center gap-1 rounded-md p-1.5 text-white/40 hover:bg-white/5 hover:text-white transition-colors">
+          <button aria-label="Notifications" className="flex items-center gap-1 rounded-md p-1.5 text-white/40 hover:bg-white/5 hover:text-white transition-colors">
             <Bell className="h-4 w-4" />
           </button>
           {/* Close button — mobile only */}
           <button
+            aria-label="Close navigation"
             onClick={onClose}
             className="flex items-center justify-center rounded-md p-1.5 text-white/40 hover:bg-white/5 hover:text-white transition-colors md:hidden"
           >

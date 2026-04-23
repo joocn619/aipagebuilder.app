@@ -139,7 +139,7 @@ export default function EditPagePage() {
   useAutoSave(handleSave, 30000);
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col bg-[#0a0a14] text-white">
       <EditorToolbar
         onSave={handleSave}
         onPublish={handlePublish}

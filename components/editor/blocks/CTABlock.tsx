@@ -13,9 +13,9 @@ export function CTABlock({ block, globalStyles, isEditing, onContentChange }: Pr
   return (
     <div className="relative overflow-hidden rounded-3xl px-8 py-16 text-center"
       style={{ backgroundColor: bg, color: textCol }}>
-      {/* Decorative circles */}
-      <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full opacity-10" style={{ backgroundColor: textCol }} />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full opacity-10" style={{ backgroundColor: textCol }} />
+      {/* Decorative radial glows — blend naturally without hard edges */}
+      <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-full blur-3xl opacity-20" style={{ background: `radial-gradient(circle, ${textCol}, transparent 70%)` }} />
+      <div className="pointer-events-none absolute bottom-0 left-0 h-64 w-64 rounded-full blur-3xl opacity-20" style={{ background: `radial-gradient(circle, ${textCol}, transparent 70%)` }} />
 
       <div className="relative mx-auto max-w-2xl">
         {isEditing ? (

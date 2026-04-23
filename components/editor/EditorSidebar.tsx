@@ -445,7 +445,7 @@ function CustomCodePanel() {
       <div>
         <Label className="text-xs">Custom CSS</Label>
         <textarea
-          className="mt-1.5 h-40 w-full rounded-md border bg-muted/50 p-2 font-mono text-xs"
+          className="mt-1.5 h-40 w-full rounded-md border bg-white/5 p-2 font-mono text-xs"
           value={customCss}
           onChange={(e) => setCustomCss(e.target.value)}
           placeholder="/* Your custom CSS */"
@@ -454,7 +454,7 @@ function CustomCodePanel() {
       <div>
         <Label className="text-xs">Custom JavaScript</Label>
         <textarea
-          className="mt-1.5 h-40 w-full rounded-md border bg-muted/50 p-2 font-mono text-xs"
+          className="mt-1.5 h-40 w-full rounded-md border bg-white/5 p-2 font-mono text-xs"
           value={customJs}
           onChange={(e) => setCustomJs(e.target.value)}
           placeholder="// Your custom JavaScript"
@@ -472,7 +472,7 @@ export function EditorSidebar() {
   const { sidebarTab, setSidebarTab } = useEditorStore();
 
   return (
-    <div className="flex h-full w-72 flex-col border-l bg-background">
+    <div className="flex h-full w-72 flex-col border-l border-white/5 bg-[#0d0d18] text-white">
       <Tabs
         value={sidebarTab}
         onValueChange={(v) => setSidebarTab(v as typeof sidebarTab)}

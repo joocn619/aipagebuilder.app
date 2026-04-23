@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -8,9 +8,47 @@ import { TEMPLATE_DATA } from "@/lib/constants/templates";
 
 const CATEGORIES = ["All", "SaaS", "Agency", "E-commerce", "Health", "Education", "Local Business", "Finance", "Creator"];
 
+const DESCRIPTIONS: Record<string, string> = {
+  "saas-1": "Hero, feature highlights, social proof, pricing teaser, and CTA — optimized for SaaS signups",
+  "saas-2": "Pricing table, feature comparison, FAQ, testimonials, and money-back guarantee section",
+  "saas-3": "Coming soon hero, waitlist signup form, benefit preview, and early-access countdown",
+  "saas-4": "Technical hero, code snippet showcase, API docs preview, GitHub integration, and dev-focused CTA",
+  "saas-5": "Extension preview hero, install steps, feature demo, ratings, and Web Store CTA",
+  "saas-6": "API overview, code examples, SDK cards, rate limits, and developer signup flow",
+  "agency-1": "Portfolio showcase, team intro, services grid, client logos, and project inquiry form",
+  "agency-2": "Results-driven hero, case studies, service packages, ROI stats, and consultation CTA",
+  "agency-3": "Visual portfolio hero, design process steps, client work gallery, and project brief form",
+  "agency-4": "Personal brand hero, skills showcase, project case studies, testimonials, and hire CTA",
+  "agency-5": "Showreel hero, production packages, client roster, behind-the-scenes, and booking CTA",
+  "ecom-1": "Launch countdown, product feature hero, early bird offer, waitlist, and launch announcement",
+  "ecom-2": "Urgency hero with timer, discounted products grid, flash deal highlights, and cart CTA",
+  "ecom-3": "App preview hero, feature list, pricing plans, reviews, and App Store install CTA",
+  "ecom-4": "Product hero with 3D mockup, benefits, reviews, shipping info, and buy now CTA",
+  "ecom-5": "Unboxing hero, monthly curation preview, subscription tiers, and gifting options",
+  "health-1": "Transformation hero, coaching packages, client results, schedule, and free consultation CTA",
+  "health-2": "Course overview hero, curriculum breakdown, instructor bio, student wins, and enroll CTA",
+  "health-3": "Product benefits hero, ingredient breakdown, clinical studies, reviews, and subscribe & save",
+  "health-4": "Studio atmosphere hero, class schedule, instructors, membership plans, and trial class CTA",
+  "edu-1": "Bootcamp outcomes hero, curriculum, mentor profiles, job placement stats, and apply CTA",
+  "edu-2": "Book mockup hero, chapter preview, author credibility, reader reviews, and download CTA",
+  "edu-3": "Webinar topic hero, speaker bio, agenda, registration form, and replay access section",
+  "edu-4": "Transformation story hero, program modules, coach credentials, application form, and testimonials",
+  "local-1": "Ambiance hero, menu highlights, reservation form, location map, and opening hours",
+  "local-2": "Property search hero, featured listings, agent bio, sold properties, and contact form",
+  "local-3": "Trust-building hero, practice areas, attorney profiles, case results, and free consultation form",
+  "local-4": "Smile transformation hero, services menu, before/after gallery, booking form, and insurance info",
+  "fin-1": "App mockup hero, key features, security badges, pricing, and app store download CTA",
+  "fin-2": "ROI-focused hero, solution overview, client logos, case study, and demo booking form",
+  "fin-3": "Expertise hero, service packages, team credentials, client portfolio, and strategy call CTA",
+  "creator-1": "Newsletter value hero, sample issue preview, subscriber count, and signup form",
+  "creator-2": "Show intro hero, episode player, guest highlights, subscribe links, and Patreon CTA",
+  "creator-3": "Community vibe hero, member highlights, benefits, upcoming events, and join CTA",
+};
+
 const TEMPLATES = TEMPLATE_DATA.map((t) => ({
   id: t.id, name: t.name, category: t.category,
-  description: t.description, blocks: t.blocks.length,
+  description: DESCRIPTIONS[t.id] || t.description,
+  blocks: t.blocks.length,
   emoji: t.emoji, tags: t.tags, isPro: t.isPro,
 }));
 
@@ -729,13 +767,19 @@ export default function DashboardTemplatesPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState("default");
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const filtered = TEMPLATES.filter((t) => {
-    const matchCat = category === "All" || t.category === category;
-    const matchSearch = !search || t.name.toLowerCase().includes(search.toLowerCase()) || t.description.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  const filtered = useMemo(() => {
+    let result = TEMPLATES.filter((t) => {
+      const matchCat = category === "All" || t.category === category;
+      const matchSearch = !search || t.name.toLowerCase().includes(search.toLowerCase()) || t.description.toLowerCase().includes(search.toLowerCase());
+      return matchCat && matchSearch;
+    });
+    if (sort === "name") result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === "category") result = [...result].sort((a, b) => a.category.localeCompare(b.category));
+    return result;
+  }, [search, category, sort]);
 
   const handleEdit = (template: (typeof TEMPLATES)[number], e: React.MouseEvent) => {
     e.stopPropagation();
@@ -774,23 +818,36 @@ export default function DashboardTemplatesPage() {
         </button>
       </div>
 
-      {/* Search + Category filter */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative max-w-xs w-full">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <Input
-            placeholder="Search templates…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 w-full"
-          />
+      {/* Search + Sort + Category filter */}
+      <div className="flex flex-col gap-2.5">
+        {/* Row 1: search + sort */}
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1 max-w-xs">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <Input
+              placeholder="Search templates…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 w-full"
+            />
+          </div>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/50 focus:outline-none focus:border-white/20 transition-colors cursor-pointer"
+          >
+            <option value="default" className="bg-[#0d0d18]">Default</option>
+            <option value="name" className="bg-[#0d0d18]">Name A–Z</option>
+            <option value="category" className="bg-[#0d0d18]">Category</option>
+          </select>
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        {/* Row 2: category pills — single scrollable row */}
+        <div className="flex gap-1.5 overflow-x-auto pb-0.5" style={{ scrollbarWidth: "none" }}>
           {CATEGORIES.map((cat) => (
             <button key={cat} onClick={() => setCategory(cat)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+              className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium transition-all ${
                 category === cat
                   ? "bg-violet-500/20 text-violet-300 border-violet-500/40"
                   : "border-white/10 bg-white/[0.03] text-white/40 hover:border-white/20 hover:text-white/70"
@@ -801,12 +858,12 @@ export default function DashboardTemplatesPage() {
         </div>
       </div>
 
-      {/* Niche count badge */}
+      {/* Result count */}
       <div className="flex items-center gap-2">
         <span className="text-xs text-white/25">{filtered.length} template{filtered.length !== 1 ? "s" : ""} shown</span>
-        {search && (
-          <button onClick={() => setSearch("")} className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
-            Clear search ×
+        {(search || category !== "All") && (
+          <button onClick={() => { setSearch(""); setCategory("All"); }} className="text-xs text-violet-400 hover:text-violet-300 transition-colors">
+            Clear ×
           </button>
         )}
       </div>
@@ -815,10 +872,12 @@ export default function DashboardTemplatesPage() {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 border-dashed py-24 text-center">
           <div className="text-4xl mb-3">🔍</div>
-          <p className="text-base font-semibold text-white/60">No templates found</p>
-          <p className="text-sm text-white/30 mt-1">Try a different search or select a different category</p>
-          <button onClick={() => { setSearch(""); setCategory("All"); }} className="mt-4 text-xs text-violet-400 hover:text-violet-300 transition-colors">
-            Reset filters
+          <p className="text-base font-semibold text-white/60">
+            No templates found{search ? ` for "${search}"` : ""}
+          </p>
+          <p className="text-sm text-white/30 mt-1">Try a different keyword or browse all categories</p>
+          <button onClick={() => { setSearch(""); setCategory("All"); }} className="mt-4 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/50 hover:text-white hover:border-white/20 transition-all">
+            Clear Search
           </button>
         </div>
       ) : (
@@ -833,8 +892,11 @@ export default function DashboardTemplatesPage() {
                 onMouseEnter={() => setHoveredId(template.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
-                {/* Preview area */}
-                <div className="relative h-48 overflow-hidden shrink-0">
+                {/* Preview area — fully clickable */}
+                <div
+                  className="relative h-48 overflow-hidden shrink-0 cursor-pointer"
+                  onClick={(e) => handleView(template, e)}
+                >
                   {preview ? (
                     <div className="h-full w-full">{preview}</div>
                   ) : (
@@ -858,7 +920,7 @@ export default function DashboardTemplatesPage() {
                     </span>
                   </div>
 
-                  {/* Hover overlay with quick-action buttons */}
+                  {/* Hover overlay */}
                   <div className={`absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 transition-all duration-200 ${isHovered ? "opacity-100" : "opacity-0"}`}
                     style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(2px)" }}>
                     <p className="text-white font-semibold text-sm">{template.emoji} {template.name}</p>
@@ -888,7 +950,7 @@ export default function DashboardTemplatesPage() {
                 {/* Info */}
                 <div className="flex flex-col flex-1 p-4">
                   <div className="flex items-start justify-between gap-2 mb-1.5">
-                    <p className="font-semibold text-sm leading-snug text-white">{template.emoji} {template.name}</p>
+                    <h3 className="font-semibold text-sm leading-snug text-white">{template.emoji} {template.name}</h3>
                     <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${CAT_COLORS[template.category] || "border-white/10 text-white/40"}`}>
                       {template.category}
                     </span>
@@ -927,6 +989,24 @@ export default function DashboardTemplatesPage() {
               </div>
             );
           })}
+
+          {/* Start from Blank — special card at end of grid */}
+          <div
+            className="group relative flex flex-col overflow-hidden rounded-2xl border-2 border-dashed border-white/10 bg-transparent cursor-pointer transition-all duration-300 hover:border-white/20 hover:bg-white/[0.02] hover:-translate-y-1"
+            onClick={() => router.push(`/editor/${Date.now()}`)}
+          >
+            <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center" style={{ minHeight: 280 }}>
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-dashed border-white/20 text-white/30 transition-all group-hover:border-white/30 group-hover:text-white/50">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm text-white/50 group-hover:text-white/70 transition-colors">Start from Blank</h3>
+                <p className="text-xs text-white/25 mt-1 group-hover:text-white/40 transition-colors">Build your own from scratch</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

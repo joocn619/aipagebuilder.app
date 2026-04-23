@@ -53,7 +53,7 @@ export function FooterBlock({ block, globalStyles, isEditing }: Props) {
       {c.copyright && (
         <div className="border-t py-5 text-center text-xs"
           style={{ borderColor: textCol ? textCol + "15" : undefined, color: textCol ? textCol + "40" : "rgba(148,163,184,0.6)" }}>
-          © {c.copyright}
+          {c.copyright}
         </div>
       )}
     </footer>
