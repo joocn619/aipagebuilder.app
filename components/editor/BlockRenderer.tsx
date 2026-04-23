@@ -56,13 +56,28 @@ const BLOCK_COMPONENTS: Record<
   accordion: AccordionBlock,
 };
 
+// Returns a safe foreground color when a block has an explicit background but no textColor.
+// Prevents invisible text when dark-mode CSS vars meet a light inline background (or vice versa).
+function autoTextColor(bg?: string): string | undefined {
+  if (!bg) return undefined;
+  const hex = bg.replace("#", "");
+  if (hex.length < 6) return undefined;
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  return lum > 0.45 ? "#1e293b" : "#f1f5f9";
+}
+
 export function BlockRenderer(props: BlockRendererProps) {
   const { block } = props;
   const Component = BLOCK_COMPONENTS[block.type] || GenericBlock;
 
+  const resolvedTextColor = block.styles.textColor || autoTextColor(block.styles.backgroundColor);
+
   const style: React.CSSProperties = {
     backgroundColor: block.styles.backgroundColor,
-    color: block.styles.textColor,
+    color: resolvedTextColor,
     paddingTop: block.styles.paddingTop,
     paddingBottom: block.styles.paddingBottom,
     paddingLeft: block.styles.paddingLeft,
